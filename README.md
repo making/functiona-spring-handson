@@ -1,6 +1,9 @@
 # functiona-spring-handson
 Functional Spring Handson
 
+![image](https://user-images.githubusercontent.com/106908/58406552-d2bb6880-80a4-11e9-8edf-e22d6015ebef.png)
+
+
 ## Prerequisite / 前提条件
 
 * https://github.com/reactor/lite-rx-api-hands-on
