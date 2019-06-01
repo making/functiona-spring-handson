@@ -1,5 +1,9 @@
 ## R2DBCによるデータベースアクセス
 
+次は[R2DBC](https://r2dbc.io)を用いて`ExpenditureBuilderRepository`のデータベース実装を作成します。
+
+`pom.xml`に次の`dependency`を追加してください。
+
 ```xml
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -15,6 +19,11 @@
             <artifactId>r2dbc-postgresql</artifactId>
         </dependency>
 ```
+
+`R2dbcExpenditureRepository`を作成して次の内容を記述してください。**TODO部分を実装してください**。
+
+* [参考資料](https://docs.spring.io/spring-data/r2dbc/docs/1.0.0.M2/reference/html/#r2dbc.datbaseclient.queries)
+
 
 ```java
 package com.example.expenditure;
@@ -47,6 +56,7 @@ public class R2dbcExpenditureRepository implements ExpenditureRepository {
     @Override
     public Mono<Expenditure> findById(Integer expenditureId) {
         // TODO
+        // "expenditure_id"が引数のexpenditureIdに一致する1件のExpenditureを返す
         return Mono.empty();
     }
 
@@ -72,6 +82,8 @@ public class R2dbcExpenditureRepository implements ExpenditureRepository {
 }
 ```
 
+`App.java`に次のメソッドを追加してください。
+
 
 ```java
     static ConnectionFactory connectionFactory() {
@@ -82,6 +94,7 @@ public class R2dbcExpenditureRepository implements ExpenditureRepository {
 
     static String url(String databaseUrl) {
         URI uri = URI.create(databaseUrl);
+        // https://github.com/r2dbc/r2dbc-postgresql/pull/117
         return ("postgres".equals(uri.getScheme()) ? databaseUrl.replace("postgres", "postgresql") : databaseUrl);
     }
 
@@ -108,6 +121,8 @@ public class R2dbcExpenditureRepository implements ExpenditureRepository {
     }
 ```
 
+また、`routes`メソッドも次のように変更してください。
+
 ```java
     static RouterFunction<ServerResponse> routes() {
         final ConnectionFactory connectionFactory = connectionFactory();
@@ -121,6 +136,8 @@ public class R2dbcExpenditureRepository implements ExpenditureRepository {
         return new ExpenditureHandler(new R2dbcExpenditureRepository(databaseClient, transactionalOperator)).routes();
     }
 ```
+
+`App`クラスの`main`メソッドを実行して、次のリクエストを送り、正しくレスポンスが返ることを確認してください。
 
 ```
 $ curl localhost:8080/expenditures -d "{\"expenditureName\":\"コーヒー\",\"unitPrice\":300,\"quantity\":1,\"expenditureDate\":\"2019-06-03\"}" -H "Content-Type: application/json"
@@ -211,9 +228,13 @@ public class R2dbcExpenditureRepository implements ExpenditureRepository {
 
 ### Cloud Foundryへのデプロイ
 
+Pivotal Web ServicesでPostgreSQLサービスをプロビジョニングします。`cf create-service`コマンドで`moneyger-db`インスタンスを作成してください。
+
 ```
 cf create-service elephantsql turtle moneyger-db
 ```
+
+`manifest.yml`も更新してください。
 
 ```yaml
 applications:
@@ -227,11 +248,14 @@ applications:
   - moneyger-db
 ```
 
+ビルドして`cf push`してください。
+
 ```
 ./mvnw clean package
 cf push
 ```
 
+次のリクエストを送り、正しくレスポンスが返ることを確認してください。
 
 ```
 curl https://moneyger-<CHANGE ME>.cfapps.io/expenditures -d "{\"expenditureName\":\"コーヒー\",\"unitPrice\":300,\"quantity\":1,\"expenditureDate\":\"2019-06-03\"}" -H "Content-Type: application/json"
@@ -241,12 +265,21 @@ curl https://moneyger-<CHANGE ME>.cfapps.io/expenditures/1
 
 ### Connection Poolの設定
 
+今回使用したPostgreSQLサービスは無料プランを使用しており、同時接続数が4という制限があります。
+現在のコードでは5コネクション以上同時に接続するとエラーが発生します。
+
+Connection Poolを設定し、最大Pool数を4にすることでエラーを防ぎます。
+
+`pom.xml`に次の`dependency`を追加してください。
+
 ```xml
         <dependency>
             <groupId>io.r2dbc</groupId>
             <artifactId>r2dbc-pool</artifactId>
         </dependency>
 ```
+
+`App.java`に次のメソッドを追加してください。
 
 ```java
     static ConnectionPool connectionPool(ConnectionFactory connectionFactory) {
@@ -258,6 +291,9 @@ curl https://moneyger-<CHANGE ME>.cfapps.io/expenditures/1
     }
 ```
 
+`routes`メソッドの次の箇所を、
+
+
 ```java
     static RouterFunction<ServerResponse> routes() {
         final ConnectionFactory connectionFactory = connectionFactory();
@@ -265,7 +301,7 @@ curl https://moneyger-<CHANGE ME>.cfapps.io/expenditures/1
     }
 ```
 
-↓
+次のように変更してください。
 
 ```java
     static RouterFunction<ServerResponse> routes() {
@@ -274,11 +310,14 @@ curl https://moneyger-<CHANGE ME>.cfapps.io/expenditures/1
     }
 ```
 
+ビルドして`cf push`してください。
+
 ```
 ./mvnw clean package
 cf push
 ```
 
+[`wrk`](https://github.com/wg/wrk)コマンドで負荷をかけてもエラーが発生しないことが確認できます。
 
 ```
 wrk -t32 -c100 -d60s --latency --timeout 30s https://moneyger-<CHANGE ME>.cfapps.io/expenditures

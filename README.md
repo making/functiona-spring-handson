@@ -6,6 +6,9 @@ Functional Spring Handson
 
 ![image](https://user-images.githubusercontent.com/106908/58406552-d2bb6880-80a4-11e9-8edf-e22d6015ebef.png)
 
+またメモリ使用量を抑えることで、Cloud Foundry([Pivotal Web Services](https://run.pivotal.io))上で安く運用し続けられるようにします。
+
+[完成例](https://moneyger.cfapps.io/)
 
 ## Prerequisite / 前提条件
 
@@ -22,6 +25,7 @@ Reactorの知識が必要になります。以下のハンズオンを事前に�
 1. [R2DBCによるデータベースアクセス](03-r2dbc.md)
 1. [Web UIの追加](04-web-ui.md)
 1. [例外ハンドリングの改善](05-exception-handling.md)
+1. [宿題] 収入APIの実装
 
 ## Further reading / 参考資料
 

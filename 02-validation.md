@@ -3,7 +3,7 @@
 次はValidationを実装します。今回はBean Validationではなく、Spring WebFlux.fnによりFitした使い方ができる[YAVI](https://github.com/making/yavi)を使用します。
 
 
-**TODO**部分を実装してください。動作を確認するためのテストコードは以下に続きます。TODOを実装する前にテストを実行してくだい。
+**TODO部分を実装してください**。動作を確認するためのテストコードは以下に続きます。TODOを実装する前にテストを実行してくだい。
 
 * [参考資料](https://github.com/making/yavi)
 
