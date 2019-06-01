@@ -34,7 +34,6 @@ public class Expenditure {
     // 追加
     private static Validator<Expenditure> validator = ValidatorBuilder.of(Expenditure.class)
         .constraint(Expenditure::getExpenditureId, "expenditureId", c -> c.isNull())
-        .constraint(Expenditure::getExpenditureName, "expenditureName", c -> c.notEmpty().lessThan(255))
         // TODO
         // "expenditureName"は空ではなく、文字数は255以下
         // "unitPrice"は0より大きい
