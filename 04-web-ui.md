@@ -1,5 +1,8 @@
 ## Web UIの追加
 
+APIに対するWeb UIを追加します。
+
+`pom.xml`に次の`repository`を追加してください。
 
 ```xml
     <repositories>
@@ -12,6 +15,8 @@
     </repositories>
 ```
 
+`pom.xml`に次の`dependency`を追加してください。
+
 ```xml
         <dependency>
             <groupId>com.github.making</groupId>
@@ -19,6 +24,8 @@
             <version>master-SNAPSHOT</version>
         </dependency>
 ```
+
+`App.java`に次のメソッドを追加してください。
 
 ```java
     static RouterFunction<ServerResponse> staticRoutes() {
@@ -29,6 +36,8 @@
     }
 ```
 
+`routes`メソッドを次の箇所を
+
 ```java
     static RouterFunction<ServerResponse> routes() {
         // ...
@@ -37,7 +46,7 @@
     }
 ```
 
-↓
+次のように変更してください。
 
 ```java
     static RouterFunction<ServerResponse> routes() {
@@ -48,6 +57,7 @@
     }
 ```
 
+`App`クラスの`main`メソッドを実行して、[http://localhost:8080](http://localhost:8080)にアクセスしてください。
 
 ![image](https://user-images.githubusercontent.com/106908/58406424-8b34dc80-80a4-11e9-932d-1bcfd032a2f6.png)
 
@@ -55,6 +65,8 @@
 
 
 ### Cloud Foundryにデプロイ
+
+ビルドして`cf push`してください。
 
 ```
 ./mvnw clean package
