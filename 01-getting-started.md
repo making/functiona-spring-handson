@@ -641,6 +641,9 @@ public class ExpenditureHandler {
 
 ### 日付フィールドの変更
 
+`expenditureDate`が`[year, month, day]`のリスト形式で返却されているので、`"year-month-day"`の文字列形式に変更しましょう。
+
+`App.java`に以下のメソッドを追加して、
 
 ```java
     public static HandlerStrategies handlerStrategies() {
@@ -659,15 +662,21 @@ public class ExpenditureHandler {
     }
 ```
 
+`main`メソッド中の次のコード
+
 ```java
         HttpHandler httpHandler = RouterFunctions.toHttpHandler(App.routes(),
             HandlerStrategies.builder().build());
 ```
-
+を
 ```java
         HttpHandler httpHandler = RouterFunctions.toHttpHandler(App.routes(),
             App.handlerStrategies());
 ```
+に変更してください。
+
+
+これに合わせて`ExpenditureHandlerTest`の`before`メソッドも以下のように修正してください。
 
 ```java
     @BeforeAll
@@ -679,16 +688,22 @@ public class ExpenditureHandler {
 ```
 
 
+`ExpenditureHandlerTest`コード内のTODO部分、次のような箇所に対して
+
 ```java
                 // TODO 後で実装します
                 //assertThat(body.get(0).get("expenditureDate").asText()).isEqualTo("2019-04-01");
 ```
 
+次のようにコメントを削除してください。
+
 ```java
                 assertThat(body.get(0).get("expenditureDate").asText()).isEqualTo("2019-04-01");
 ```
 
-5箇所
+5箇所あります。
+
+変更後の全てのテストが成功したら、`App`クラスの`main`メソッドを実行して、次のリクエストを送り、正しくレスポンスが返ることを確認してください。
 
 ```
 $ curl localhost:8080/expenditures -d "{\"expenditureName\":\"コーヒー\",\"unitPrice\":300,\"quantity\":1,\"expenditureDate\":\"2019-06-03\"}" -H "Content-Type: application/json"
