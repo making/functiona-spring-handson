@@ -1,5 +1,12 @@
 ## 簡易家計簿Moneygerプロジェクトの作成
 
+簡易家計簿Moneygerのプロジェクトを作成します。
+
+プロジェクトの雛形はMaven Archetypeの[vanilla-spring-webflux-fn-blank](https://github.com/making/vanilla-spring-webflux-fn-blank)を使用します。
+
+
+次のコマンドで雛形プロジェクトを作成してください。Windowsの場合はGit BashなどのBash実行環境を使用してください。
+
 ```
 mvn archetype:generate\
  -DarchetypeGroupId=am.ik.archetype\
@@ -9,8 +16,11 @@ mvn archetype:generate\
  -DartifactId=moneyger\
  -Dversion=1.0.0-SNAPSHOT\
  -B
+```
 
+同梱のサンプルコードの動作を確認します。
 
+```
 cd moneyger
 chmod +x mvnw
 ./mvnw clean package
@@ -29,9 +39,11 @@ $ curl localhost:8080/messages
 [{"text":"Hello"}]
 ```
 
-### `Expenditure`モデルの作成
+### `Expenditure`(支出)モデルの作成
 
-`com.example.expenditure`パッケージを作って`Expenditure.java`を作成してください。
+家計簿の支出モデルを作成します。
+
+`com.example.expenditure`パッケージを作って以下の`Expenditure.java`と`ExpenditureBuilder.java`を作成してください。
 
 ```java
 package com.example.expenditure;
@@ -99,8 +111,6 @@ public class Expenditure {
 }
 ```
 
-また`ExpenditureBuilder.java`を作成してください。
-
 
 ```java
 package com.example.expenditure;
@@ -166,6 +176,8 @@ public class ExpenditureBuilder {
 
 ### `ExpenditureRepository`の作成
 
+`com.example.expenditure`パッケージに`ExpenditureBuilderRepository`インタフェースを作成してください。
+
 ```java
 package com.example.expenditure;
 
@@ -183,6 +195,8 @@ public interface ExpenditureRepository {
     Mono<Void> deleteById(Integer expenditureId);
 }
 ```
+
+まずは`ExpenditureBuilderRepository`インタフェースのインメモリ実装である`InMemoryExpenditureRepository`を作成します。
 
 ```java
 package com.example.expenditure;
@@ -236,6 +250,11 @@ public class InMemoryExpenditureRepository implements ExpenditureRepository {
 
 ### `ExpenditureHandler`の作成
 
+次に`com.example.expenditure`パッケージに`ExpenditureHandler`クラスを作成し、WebFlux.fnの`RouterFunction`を実装します。
+
+次の**TODO(3箇所)は実装しないといけない部分です**。動作を確認するためのテストコードは以下に続きます。TODOを実装する前にテストを実行してくだい。
+
+* [参考資料](https://docs.spring.io/spring/docs/5.2.0.M2/spring-framework-reference/web-reactive.html#webflux-fn)
 
 ```java
 package com.example.expenditure;
@@ -261,8 +280,10 @@ public class ExpenditureHandler {
 
     public RouterFunction<ServerResponse> routes() {
         return RouterFunctions.route()
-            // TODO
-            // .doSomething()
+            // TODO Routingの定義
+            // GET /expenditures
+            // GET /expenditures/{expenditureId}
+            // POST /expenditures
             .DELETE("/expenditures/{expenditureId}", this::delete)
             .build();
     }
@@ -274,7 +295,7 @@ public class ExpenditureHandler {
     Mono<ServerResponse> post(ServerRequest req) {
         return req.bodyToMono(Expenditure.class)
             // TODO
-            // .doSomething()
+            // ExpenditureRepositoryでExpenditureを保存
             .flatMap(created -> ServerResponse
                 .created(UriComponentsBuilder.fromUri(req.uri()).path("/{expenditureId}").build(created.getExpenditureId()))
                 .syncBody(created));
@@ -284,15 +305,7 @@ public class ExpenditureHandler {
         return this.expenditureRepository.findById(Integer.valueOf(req.pathVariable("expenditureId")))
             .flatMap(expenditure -> ServerResponse.ok().syncBody(expenditure))
             // TODO
-            // .doSomething()
-            .switchIfEmpty(Mono.defer(() -> ServerResponse.status(NOT_FOUND).syncBody(new LinkedHashMap<String, Object>() {
-
-                {
-                    put("status", 404);
-                    put("error", "Not Found");
-                    put("message", "The given expenditure is not found.");
-                }
-            })));
+            // expenditureが存在しない場合は404を返す。エラーレスポンスは{"status":404,"error":"Not Found","message":"The given expenditure is not found."}
             ;
     }
 
@@ -302,6 +315,16 @@ public class ExpenditureHandler {
     }
 }
 ```
+
+`src/main/java/com/example/App.java`の`routes`メソッドを下のコードに変更してください。
+
+```java
+    static RouterFunction<ServerResponse> routes() {
+        return new ExpenditureHandler(new InMemoryExpenditureRepository()).routes();
+    }
+```
+
+`src/test/java/com/example/expenditure`に`ExpenditureHandlerTest`を作成して、次のテストコードを記述してください。
 
 ```java
 package com.example.expenditure;
@@ -515,14 +538,12 @@ public class ExpenditureHandlerTest {
 }
 ```
 
+TODOを実装しないでテストを実行すると次のように`delete`以外のテストが失敗します。
+
 ![image](https://user-images.githubusercontent.com/106908/58398135-e8be2e80-808e-11e9-900d-744ad0961a6a.png)
 
 
-```java
-    static RouterFunction<ServerResponse> routes() {
-        return new ExpenditureHandler(new InMemoryExpenditureRepository()).routes();
-    }
-```
+TODOを実装して、全てのテストが成功したら、`App`クラスの`main`メソッドを実行して、次のリクエストを送り、正しくレスポンスが返ることを確認してください。
 
 ```
 $ curl localhost:8080/expenditures -d "{\"expenditureName\":\"コーヒー\",\"unitPrice\":300,\"quantity\":1,\"expenditureDate\":[2019,6,3]}" -H "Content-Type: application/json"
