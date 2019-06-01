@@ -3,7 +3,7 @@
 次はValidationを実装します。今回はBean Validationではなく、Spring WebFlux.fnによりFitした使い方ができる[YAVI](https://github.com/making/yavi)を使用します。
 
 
-**TODO**部分を実装してください。動作を確認するためのテストコードは以下に続きます。
+**TODO**部分を実装してください。動作を確認するためのテストコードは以下に続きます。TODOを実装する前にテストを実行してくだい。
 
 * [参考資料](https://github.com/making/yavi)
 
@@ -272,6 +272,7 @@ public class ErrorResponseBuilder {
     }
 ```
 
+TODOを実装しないでテストを実行すると次のように`post_400`のテストが失敗します。
 
 ![image](https://user-images.githubusercontent.com/106908/58399914-9f70dd80-8094-11e9-8c90-83a3cff22aae.png)
 
@@ -297,6 +298,10 @@ but was not.
 
 {"status":400,"error":"Bad Request","details":{"expenditureId":["\"expenditureId\" must be null"],"expenditureDate":["\"expenditureDate\" must not be null"]}}
 ```
+
+`Expenditure`クラスのTODOを実装して、テストが通ることを確認してください。
+
+TODOの実装例は次の通りです。
 
 <details>
   <summary><code>Expenditure</code>の正解例</summary>
