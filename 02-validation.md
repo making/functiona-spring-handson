@@ -390,6 +390,8 @@ public class Expenditure {
 
 </details>
 
+TODOを実装して、全てのテストが成功したら、`App`クラスの`main`メソッドを実行して、次のリクエストを送り、正しくレスポンスが返ることを確認してください。
+
 ```
 $ curl localhost:8080/expenditures -d "{\"expenditureId\":1000,\"expenditureName\":\"\",\"unitPrice\":-1,\"quantity\":-1,\"expenditureDate\":null}" -H "Content-Type: application/json"
 {"status":400,"error":"Bad Request","details":{"expenditureId":["\"expenditureId\" must be null"],"expenditureName":["\"expenditureName\" must not be empty"],"unitPrice":["\"unitPrice\" must be greater than 0"],"quantity":["\"quantity\" must be greater than 0"],"expenditureDate":["\"expenditureDate\" must not be null"]}}
