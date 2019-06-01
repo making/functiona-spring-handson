@@ -731,6 +731,16 @@ $ curl localhost:8080/expenditures
 
 ### Cloud Foundryへのデプロイ
 
+作成したアプリケーションをCloud Foundry([Pivotal Web Services](https://run.pivotal.io))にデプロイします。
+
+`cf login`でログインします。
+
+```
+cf login -a api.run.pivotal.io
+```
+
+プロジェクト直下で`manifest.yml`を作成し、次の内容を記述してください。
+
 ```yaml
 applications:
 - name: moneyger
@@ -741,13 +751,27 @@ applications:
     JBP_CONFIG_OPEN_JDK_JRE: '[memory_calculator: {stack_threads: 30}]'
 ```
 
+> `manifest.yml`はかなり小さなメモリを使用するようにチューニングされています。コンテナのメモリサイズは128MBで、そのうち
+> ReservedCodeCacheSizeが22MB、MaxDirectMemorySizeが22MB、MaxMetaspaceSizeが54MB、スレッドスタックが512KB * 30 = 15MB
+> 残る15MBがヒープサイズに使用されます。
+> このメモリサイズをローカル環境で実行する場合は次のように実行してください。
+>
+> ```sh
+> JAVA_OPTS="-Xmx15m -XX:ReservedCodeCacheSize=22M -XX:MaxDirectMemorySize=22M -XX:MaxMetaspaceSize=54M -Xss512K"
+> java $JAVA_OPTS -jar target/moneyger-1.0.0-SNAPSHOT.jar
+> ```
+
+ビルドして、`cf push`コマンドでデプロイします。
+
 ```
 $ ./mvnw clean package
 $ cf push --random-route
 ```
 
+次のようなログが出力されてデプロイが完了します。
+
 ```
-tmaki@pivotal.io としてマニフェストから組織 APJ / スペース production にプッシュしています...
+demo@example.com としてマニフェストから組織 APJ / スペース production にプッシュしています...
 マニフェスト・ファイル /tmp/moneyger/manifest.yml を使用しています
 アプリ情報を取得しています...
 これらの属性でアプリを作成しています...
@@ -835,6 +859,10 @@ API がファイルの処理を完了するのを待機しています...
 #0   実行   2019-05-27T07:16:32Z   0.0%   128M の中の 12.3M   1G の中の 124M  
 ```
 
+アプリケーションのURLは`https://moneyger-<ランダムな文字列>.cfapps.io`です。
+
+次のリクエストを送り、正しくレスポンスが返ることを確認してください。
+
 ```
 $ curl https://moneyger-<CHANGE ME>.cfapps.io/expenditures -d "{\"expenditureName\":\"コーヒー\",\"unitPrice\":300,\"quantity\":1,\"expenditureDate\":\"2019-06-03\"}" -H "Content-Type: application/json"
 {"expenditureId":1,"expenditureName":"コーヒー","unitPrice":300,"quantity":1,"expenditureDate":"2019-06-03"}
@@ -859,8 +887,11 @@ $ curl https://moneyger-<CHANGE ME>.cfapps.io/expenditures
 []
 ```
 
+> Pivotal Web Servicesはメモリ課金であり、128MB使用の場合にかかる費用は常時起動した状態で、$2.70 (約300円) /月です。
+
 ### 補足
 
+`routes()`の定義は次のようにネストして記述することもできます。
 
 ```java
     public RouterFunction<ServerResponse> routes() {
