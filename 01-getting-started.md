@@ -282,8 +282,8 @@ public class ExpenditureHandler {
         return RouterFunctions.route()
             // TODO Routingの定義
             // GET /expenditures
-            // GET /expenditures/{expenditureId}
             // POST /expenditures
+            // GET /expenditures/{expenditureId}
             .DELETE("/expenditures/{expenditureId}", this::delete)
             .build();
     }
@@ -324,7 +324,7 @@ public class ExpenditureHandler {
     }
 ```
 
-`src/test/java/com/example/expenditure`に`ExpenditureHandlerTest`を作成して、次のテストコードを記述してください。
+`src/test/java/com/example/expenditure`に`ExpenditureHandlerTest`を作成して、次のテストコードを記述してください。TODO部分はそのままにしてください。
 
 ```java
 package com.example.expenditure;
@@ -568,6 +568,8 @@ $ curl -XDELETE localhost:8080/expenditures/1
 $ curl localhost:8080/expenditures
 []
 ```
+
+TODOの実装例は次の通りです。
 
 <details>
   <summary><code>ExpenditureHandler</code>の正解例</summary>
