@@ -1,5 +1,8 @@
 ## 例外ハンドリングの改善
 
+現在の実装では、`ExpenditureHandler`で実装した例外ハンドリング以外は適切にハンドリングされません。
+
+例えば次のリクエストを送ってみてください。レスポンスボディがなく500エラーが返ります。
 
 ```
 $ curl localhost:8080/expenditures -d "{\"unitPrice\":\"foo\"}" -H "Content-Type: application/json" -v
@@ -22,6 +25,9 @@ $ curl localhost:8080/expenditures -d "{\"unitPrice\":\"foo\"}" -H "Content-Type
 
 ### `ErrorResponseExceptionHandler`の作成
 
+適切に例外ハンドリングするために`WebExceptionHandler`クラスを実装します。
+
+`ErrorResponseExceptionHandler`クラスを作成して、次のコードを記述してください。
 
 ```java
 package com.example.error;
@@ -79,6 +85,8 @@ public class ErrorResponseExceptionHandler implements WebExceptionHandler {
 }
 ```
 
+`App`クラスの`handlerStrategies`メソッドを次のように変更してください。
+
 ```java
     public static HandlerStrategies handlerStrategies() {
         return HandlerStrategies.empty()
@@ -97,6 +105,8 @@ public class ErrorResponseExceptionHandler implements WebExceptionHandler {
             .build();
     }
 ```
+
+`App`クラスの`main`メソッドを実行して、次のリクエストを送り、正しくレスポンスが返ることを確認してください。
 
 ```
 $ curl localhost:8080/expenditures -d "{\"unitPrice\":\"foo\"}" -H "Content-Type: application/json" -v
@@ -117,4 +127,15 @@ $ curl localhost:8080/expenditures -d "{\"unitPrice\":\"foo\"}" -H "Content-Type
 < 
 * Connection #0 to host localhost left intact
 {"status":400,"error":"Bad Request","message":"400 BAD_REQUEST \"Failed to read HTTP message\"; nested exception is org.springframework.core.codec.DecodingException: JSON decoding error: Cannot deserialize value of type `int` from String \"foo\": not a valid Integer value; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `int` from String \"foo\": not a valid Integer value\n at [Source: (io.netty.buffer.ByteBufInputStream); line: 1, column: 14] (through reference chain: com.example.expenditure.ExpenditureBuilder[\"unitPrice\"])"}
+```
+
+> Spring Bootでは`WebExceptionHandler`がAuto Configureされるので、このような設定は不要です。
+
+### Cloud Foundryにデプロイ
+
+ビルドして`cf push`してください。
+
+```
+./mvnw clean package
+cf push
 ```
