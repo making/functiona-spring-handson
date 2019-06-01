@@ -75,3 +75,6 @@ cf push
 
 ![image](https://user-images.githubusercontent.com/106908/58406552-d2bb6880-80a4-11e9-8edf-e22d6015ebef.png)
 
+---
+
+興味があれば自分の好みのUIを実装してください。
