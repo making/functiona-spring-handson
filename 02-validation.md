@@ -1,5 +1,12 @@
 ## YAVIによるValidationの実装
 
+次はValidationを実装します。今回はBean Validationではなく、Spring WebFlux.fnによりFitした使い方ができる[YAVI](https://github.com/making/yavi)を使用します。
+
+
+**TODO**部分を実装してください。動作を確認するためのテストコードは以下に続きます。
+
+* [参考資料](https://github.com/making/yavi)
+
 ```java
 package com.example.expenditure;
 
@@ -29,6 +36,9 @@ public class Expenditure {
         .constraint(Expenditure::getExpenditureId, "expenditureId", c -> c.isNull())
         .constraint(Expenditure::getExpenditureName, "expenditureName", c -> c.notEmpty().lessThan(255))
         // TODO
+        // "expenditureName"は空ではなく、文字数は255以下
+        // "unitPrice"は0より大きい
+        // "quantity"は0より大きい
         // .constraint(...)
         .constraintOnObject(Expenditure::getExpenditureDate, "expenditureDate", c -> c.notNull())
         .build();
@@ -84,6 +94,7 @@ public class Expenditure {
 }
 ```
 
+次にエラーレスポンス用のJavaクラスを作成します。
 `com.example.error`パッケージを作って`ErrorResponse.java`を作成してください。
 
 
@@ -131,6 +142,8 @@ public class ErrorResponse {
     }
 }
 ```
+
+続いて`ErrorResponseBuilder.java`を作成してください。
 
 ```java
 package com.example.error;
@@ -183,6 +196,8 @@ public class ErrorResponseBuilder {
 }
 ```
 
+`ExpenditureHandler`の`get`メソッドの次の部分(`LinkedHashMap`でエラーメッセージを作成している箇所)を、
+
 ```java
     Mono<ServerResponse> get(ServerRequest req) {
         return this.expenditureRepository.findById(Integer.valueOf(req.pathVariable("expenditureId")))
@@ -198,7 +213,7 @@ public class ErrorResponseBuilder {
     }
 ```
 
-↓
+次のように`ErrorResponse`で置き換えてください。
 
 ```java
     Mono<ServerResponse> get(ServerRequest req) {
@@ -212,6 +227,8 @@ public class ErrorResponseBuilder {
     }
 ```
 
+また次の`post`メソッドにValidationを追加します。
+
 ```java
     Mono<ServerResponse> post(ServerRequest req) {
         return req.bodyToMono(Expenditure.class)
@@ -222,7 +239,7 @@ public class ErrorResponseBuilder {
     }
 ```
 
-↓
+`post`メソッドを次のように変更してください。
 
 ```java
     Mono<ServerResponse> post(ServerRequest req) {
@@ -236,6 +253,8 @@ public class ErrorResponseBuilder {
     }
 ```
 
+`ExpenditureHandlerTest`の`post_400`メソッドに付いているコメントを、
+
 ```java
     // TODO 後で実装します
     // @Test
@@ -243,6 +262,8 @@ public class ErrorResponseBuilder {
       // ...
     }
 ```
+
+次のように削除してください。
 
 ```java
     @Test
@@ -306,7 +327,7 @@ public class Expenditure {
 
     private static Validator<Expenditure> validator = ValidatorBuilder.of(Expenditure.class)
         .constraint(Expenditure::getExpenditureId, "expenditureId", c -> c.isNull())
-        .constraint(Expenditure::getExpenditureName, "expenditureName", c -> c.notEmpty().lessThan(255))
+        .constraint(Expenditure::getExpenditureName, "expenditureName", c -> c.notEmpty().lessThanOrEqual(255))
         .constraint(Expenditure::getUnitPrice, "unitPrice", c -> c.greaterThan(0))
         .constraint(Expenditure::getQuantity, "quantity", c -> c.greaterThan(0))
         .constraintOnObject(Expenditure::getExpenditureDate, "expenditureDate", c -> c.notNull())
