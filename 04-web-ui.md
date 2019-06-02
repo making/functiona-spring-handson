@@ -32,6 +32,10 @@ APIに対するWeb UIを追加します。
         return RouterFunctions.route()
             .GET("/", req -> ServerResponse.ok().syncBody(new ClassPathResource("META-INF/resources/index.html")))
             .resources("/**", new ClassPathResource("META-INF/resources/"))
+            .filter((request, next) -> next.handle(request)
+                .flatMap(response -> ServerResponse.from(response)
+                    .cacheControl(CacheControl.maxAge(Duration.ofDays(1)))
+                    .build(response::writeTo)))
             .build();
     }
 ```
