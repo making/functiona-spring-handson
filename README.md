@@ -25,7 +25,7 @@ Reactorの知識が必要になります。以下のハンズオンを事前に�
 1. [R2DBCによるデータベースアクセス](03-r2dbc.md)
 1. [Web UIの追加](04-web-ui.md)
 1. [例外ハンドリングの改善](05-exception-handling.md)
-1. [宿題] 収入APIの実装
+1. [宿題] [収入APIの実装](06-income-api.md)
 
 ## Further reading / 参考資料
 

@@ -104,18 +104,12 @@ public class R2dbcExpenditureRepository implements ExpenditureRepository {
                 .sql("CREATE TABLE IF NOT EXISTS expenditure (expenditure_id INT PRIMARY KEY AUTO_INCREMENT, expenditure_name VARCHAR(255), unit_price INT NOT NULL, quantity INT NOT NULL, " +
                     "expenditure_date DATE NOT NULL)")
                 .then()
-                .then(databaseClient.execute()
-                    .sql("CREATE TABLE IF NOT EXISTS income (income_id INT PRIMARY KEY AUTO_INCREMENT, income_name VARCHAR(255), amount INT NOT NULL, income_date DATE NOT NULL)")
-                    .then())
                 .subscribe();
         } else if ("PostgreSQL".equals(name)) {
             databaseClient.execute()
                 .sql("CREATE TABLE IF NOT EXISTS expenditure (expenditure_id SERIAL PRIMARY KEY, expenditure_name VARCHAR(255), unit_price INT NOT NULL, quantity INT NOT NULL, " +
                     "expenditure_date DATE NOT NULL)")
                 .then()
-                .then(databaseClient.execute()
-                    .sql("CREATE TABLE IF NOT EXISTS income (income_id SERIAL PRIMARY KEY, income_name VARCHAR(255), amount INT NOT NULL, income_date DATE NOT NULL)")
-                    .then())
                 .subscribe();
         }
     }
