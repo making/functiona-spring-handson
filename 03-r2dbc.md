@@ -155,7 +155,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class R2dbcExpenditureRepositoryTest {
+class R2dbcExpenditureRepositoryTest {
 
     R2dbcExpenditureRepository expenditureRepository;
 
