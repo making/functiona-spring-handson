@@ -34,7 +34,7 @@ APIに対するWeb UIを追加します。
             .resources("/**", new ClassPathResource("META-INF/resources/"))
             .filter((request, next) -> next.handle(request)
                 .flatMap(response -> ServerResponse.from(response)
-                    .cacheControl(CacheControl.maxAge(Duration.ofDays(1)))
+                    .cacheControl(CacheControl.maxAge(Duration.ofDays(3)))
                     .build(response::writeTo)))
             .build();
     }
