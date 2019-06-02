@@ -11,7 +11,7 @@
 mvn archetype:generate\
  -DarchetypeGroupId=am.ik.archetype\
  -DarchetypeArtifactId=vanilla-spring-webflux-fn-blank-archetype\
- -DarchetypeVersion=0.2.6\
+ -DarchetypeVersion=0.2.7\
  -DgroupId=com.example\
  -DartifactId=moneyger\
  -Dversion=1.0.0-SNAPSHOT\
@@ -23,7 +23,7 @@ mvn archetype:generate\
 ```
 cd moneyger
 chmod +x mvnw
-./mvnw clean package
+./mvnw clean package -DskipTests=true
 
 java -jar target/moneyger-1.0.0-SNAPSHOT.jar
 ```
@@ -764,7 +764,7 @@ applications:
 ビルドして、`cf push`コマンドでデプロイします。
 
 ```
-$ ./mvnw clean package
+$ ./mvnw clean package -DskipTests=true
 $ cf push --random-route
 ```
 

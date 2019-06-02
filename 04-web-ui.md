@@ -73,7 +73,7 @@ APIに対するWeb UIを追加します。
 ビルドして`cf push`してください。
 
 ```
-./mvnw clean package
+./mvnw clean package -DskipTests=true
 cf push
 ```
 

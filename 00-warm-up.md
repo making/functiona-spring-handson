@@ -51,7 +51,7 @@ public class HelloFnApplication {
 
 ```
 cd hello-fn
-./mvnw clean package -DskipTests=true
+./mvnw clean package -DskipTests=true -DskipTests=true
 java -jar target/hello-fn-0.0.1-SNAPSHOT.jar
 ```
 

@@ -244,7 +244,7 @@ applications:
 ビルドして`cf push`してください。
 
 ```
-./mvnw clean package
+./mvnw clean package -DskipTests=true
 cf push
 ```
 
@@ -306,7 +306,7 @@ Connection Poolを設定し、最大Pool数を4にすることでエラーを防
 ビルドして`cf push`してください。
 
 ```
-./mvnw clean package
+./mvnw clean package -DskipTests=true
 cf push
 ```
 

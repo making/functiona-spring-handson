@@ -136,6 +136,6 @@ $ curl localhost:8080/expenditures -d "{\"unitPrice\":\"foo\"}" -H "Content-Type
 ビルドして`cf push`してください。
 
 ```
-./mvnw clean package
+./mvnw clean package -DskipTests=true
 cf push
 ```
