@@ -23,7 +23,7 @@ mvn archetype:generate\
 ```
 cd moneyger
 chmod +x mvnw
-./mvnw clean package -DskipTests=true
+./mvnw clean package
 
 java -jar target/moneyger-1.0.0-SNAPSHOT.jar
 ```
@@ -306,6 +306,7 @@ public class ExpenditureHandler {
             .flatMap(expenditure -> ServerResponse.ok().syncBody(expenditure))
             // TODO
             // expenditureが存在しない場合は404を返す。エラーレスポンスは{"status":404,"error":"Not Found","message":"The given expenditure is not found."}
+            // Hint: switchIfEmptyおよびServerResponse.statusを使ってください。
             ;
     }
 

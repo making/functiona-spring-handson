@@ -298,6 +298,10 @@ class R2dbcExpenditureRepositoryTest {
 }
 ```
 
+TODOを実装しないでテストを実行すると次のように`findById`テストが失敗します。
+
+![image](https://user-images.githubusercontent.com/106908/58765856-374d5a80-85b2-11e9-86e0-b3ec15d40b0a.png)
+
 TODOを実装して、全てのテストが成功したら、`App`クラスの`main`メソッドを実行して、次のリクエストを送り、正しくレスポンスが返ることを確認してください。
 
 ```
