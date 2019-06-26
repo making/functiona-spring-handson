@@ -4,28 +4,15 @@ Functional Spring Handson
 本ハンズオンで、次の図のような簡易家計簿のAPIサーバーをSpring WebFlux.fnを使って実装します。
 あえてSpring BootもDependency Injectionも使わないシンプルなWebアプリとして実装します。
 
-![image](https://user-images.githubusercontent.com/106908/58406552-d2bb6880-80a4-11e9-8edf-e22d6015ebef.png)
-
-またメモリ使用量を抑えることで、Cloud Foundry([Pivotal Web Services](https://run.pivotal.io))上で安く運用し続けられるようにします。
-
-[完成例](https://moneyger.cfapps.io/)
-
-## Prerequisite / 前提条件
-
-Reactorの知識が必要になります。以下のハンズオンを事前に実施しておくことを強くオススメします。
-
-* https://github.com/reactor/lite-rx-api-hands-on
-* https://docs.google.com/presentation/d/1-0NopTfA-CGiCNvKPDOH9ZDMHhazKuoT-_1R69Wp8qs
-
 ## Contents
 
-1. [ウォームアップ](00-warm-up.md) (当日は実施しませんので、事前に実施しておいてください。)
-1. [簡易家計簿Moneygerプロジェクトの作成](01-getting-started.md)
-1. [YAVIによるValidationの実装](02-validation.md)
-1. [R2DBCによるデータベースアクセス](03-r2dbc.md)
-1. [Web UIの追加](04-web-ui.md)
-1. [例外ハンドリングの改善](05-exception-handling.md)
-1. [宿題] [収入APIの実装](06-income-api.md)
+1. [はじめに](https://github.com/making/blog.ik.am/blob/master/content/00500.md) (当日は実施しませんので、事前に実施しておいてください。)
+1. [簡易家計簿Moneygerプロジェクトの作成](https://github.com/making/blog.ik.am/blob/master/content/00501.md)
+1. [YAVIによるValidationの実装](https://github.com/making/blog.ik.am/blob/master/content/00502.md)
+1. [R2DBCによるデータベースアクセス](https://github.com/making/blog.ik.am/blob/master/content/00503.md)
+1. [Web UIの追加](https://github.com/making/blog.ik.am/blob/master/content/00504.md)
+1. [例外ハンドリングの改善](https://github.com/making/blog.ik.am/blob/master/content/00505.md)
+1. [宿題] [収入APIの実装](https://github.com/making/blog.ik.am/blob/master/content/00506.md)
 
 ## Further reading / 参考資料
 
